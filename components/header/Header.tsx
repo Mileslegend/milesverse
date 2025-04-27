@@ -7,10 +7,10 @@ import {
   SignedOut,
   SignInButton,
 } from "@clerk/nextjs";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import Image from "next/image";
 import { ChevronsLeftIcon, MenuIcon } from "lucide-react";
-import { useSidebar } from "./ui/sidebar";
+import { useSidebar } from "../ui/sidebar";
 
 const Header = () => {
   //const { user } = useUser();

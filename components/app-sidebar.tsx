@@ -1,7 +1,6 @@
 import * as React from "react";
 import {
   FlameIcon,
-  GalleryVerticalEnd,
   HomeIcon,
   Minus,
   Plus,
@@ -30,6 +29,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { getSubverses } from "@/sanity/lib/subverse/getSubverses";
+import CreateCommunityButton from "./header/CreateCommunityButton";
 
 type SidebarData = {
   navMain: {
@@ -64,7 +64,7 @@ export async function AppSidebar({
     ],
   };
 
-  console.log(subverses);
+  //console.log(subverses);
 
   return (
     <Sidebar {...props}>
@@ -91,7 +91,7 @@ export async function AppSidebar({
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton asChild>
-                {/* <CreateCommunityButton /> */}
+                <CreateCommunityButton />
               </SidebarMenuButton>
 
               <SidebarMenuButton asChild className="p-5">
