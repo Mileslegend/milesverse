@@ -42,6 +42,7 @@ export default function RootLayout({
             </SidebarInset>
            
           </SidebarProvider>
+          <SanityLive />
         </body>
       </html>
     </ClerkProvider>
