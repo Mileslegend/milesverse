@@ -1,5 +1,12 @@
 import * as React from "react";
-import { FlameIcon, GalleryVerticalEnd, HomeIcon, Minus, Plus, TrendingUpIcon } from "lucide-react";
+import {
+  FlameIcon,
+  GalleryVerticalEnd,
+  HomeIcon,
+  Minus,
+  Plus,
+  TrendingUpIcon,
+} from "lucide-react";
 
 import { SearchForm } from "@/components/search-form";
 import {
@@ -22,42 +29,42 @@ import {
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import Image from "next/image";
+import { getSubverses } from "@/sanity/lib/subverse/getSubverses";
 
 type SidebarData = {
   navMain: {
     title: string;
     url: string;
-    items: { 
-      title: string; 
-      url: string; 
-      isActive: boolean }[];
+    items: {
+      title: string;
+      url: string;
+      isActive: boolean;
+    }[];
   }[];
 };
 
-// This is sample data.
-const sidebarData = {
-  navMain: [
-    {
-      title: "Communities",
-      url: "#",
-      items: [
-        {
-          title: "Installation",
-          url: "#",
-        },
-        {
-          title: "Project Structure",
-          url: "#",
-        },
-      ],
-    },
-  ],
-};
-
-export async function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-
+export async function AppSidebar({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
+  
   //TODO get all sub reddits from sanity
-  //const subverses = await getSubverses();
+  const subverses = await getSubverses();
+  // This is sample data.
+  const sidebarData = {
+    navMain: [
+      {
+        title: "Communities",
+        url: "#",
+        items: subverses?.map((subverse) => ({
+          title: subverse.title,
+          url: `/community/${subverse.slug}`,
+          isActive: false,
+        })) || [],
+      },
+    ],
+  };
+
+  console.log(subverses);
 
   return (
     <Sidebar {...props}>
@@ -80,37 +87,36 @@ export async function AppSidebar({ ...props }: React.ComponentProps<typeof Sideb
         <SearchForm />
       </SidebarHeader>
       <SidebarContent>
+        <SidebarGroup>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                {/* <CreateCommunityButton /> */}
+              </SidebarMenuButton>
 
-      <SidebarGroup>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              {/* <CreateCommunityButton /> */}
-            </SidebarMenuButton>
+              <SidebarMenuButton asChild className="p-5">
+                <Link href="/">
+                  <HomeIcon className="w-4 h-4 mr-2" />
+                  Home
+                </Link>
+              </SidebarMenuButton>
 
-            <SidebarMenuButton asChild className="p-5">
-              <Link href='/'>
-              <HomeIcon className="w-4 h-4 mr-2"/>
-              Home
-              </Link>
-            </SidebarMenuButton>
+              <SidebarMenuButton asChild className="p-5">
+                <Link href="/popular">
+                  <TrendingUpIcon className="w-4 h-4 mr-2" />
+                  Popular
+                </Link>
+              </SidebarMenuButton>
 
-            <SidebarMenuButton asChild className="p-5">
-              <Link href='/popular'>
-              <TrendingUpIcon className="w-4 h-4 mr-2"/>
-              Popular
-              </Link>
-            </SidebarMenuButton>
-
-            <SidebarMenuButton asChild className="p-5">
-              <Link href='/hot'>
-              <FlameIcon className="w-4 h-4 mr-2"/>
-              Hot / Controversial
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarGroup>
+              <SidebarMenuButton asChild className="p-5">
+                <Link href="/hot">
+                  <FlameIcon className="w-4 h-4 mr-2" />
+                  Hot / Controversial
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroup>
 
         <SidebarGroup>
           <SidebarMenu>
