@@ -32,7 +32,7 @@ function CreateCommunityButton() {
 
   const [isPending, startTransition] = useTransition();
 
-  const router = useRouter()
+  const router = useRouter();
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -128,15 +128,15 @@ function CreateCommunityButton() {
         );
 
         console.log("Community Created 🤗:", result)
-        //router.push(`/community/${result.subverse._id}`)
+        
 
-        if ("error" in result && result.error) {
-          setErrorMessage(result.error);
-        } else if ("subverse" in result && result.subverse) {
-          setOpen(false);
-          0;
-          resetForm();
-          //router.refresh();
+        if ("error" in result) {
+          setErrorMessage(result.error)
+        } else {
+          // result is a Subverse
+          setOpen(false)
+          resetForm()
+          router.push(`/community/${result.slug.current}`)
         }
       } catch (error) {
         console.error("Failed to create community", error);
@@ -287,7 +287,7 @@ function CreateCommunityButton() {
             <Button
               type="submit"
               disabled={isPending || !user}
-              className="w-full mt-4 bg-red-600 hover:bg-red-700 text-white font-medium py-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full mt-2 bg-red-600 hover:bg-red-700 text-white font-medium py-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isPending
                 ? "Creating ..."

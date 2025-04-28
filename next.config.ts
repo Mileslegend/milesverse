@@ -1,10 +1,22 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // This tells Next.js to allow development requests from your Gitpod public URL
+  // 1️⃣ Whitelist your Gitpod (or Codespace/ngrok) URL
   allowedDevOrigins: [
-    "https://3000-mileslegend-milesverse-a48pxt1fjb9.ws-eu118.gitpod.io"
-  ]
+    "https://3000-mileslegend-milesverse-a48pxt1fjb9.ws-eu118.gitpod.io",
+  ],
+
+  // 2️⃣ Use the new remotePatterns format instead of domains
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "img.clerk.com",
+        port: "",        // leave empty if default 443
+        pathname: "/**", // allow any path under img.clerk.com
+      },
+    ],
+  },
 };
 
 export default nextConfig;
