@@ -64,7 +64,7 @@ export async function AppSidebar({
     ],
   };
 
-  //console.log(subverses);
+  console.log(subverses);
 
   return (
     <Sidebar {...props}>

@@ -327,10 +327,27 @@ export type GetSubversesQueryResult = Array<{
   createdAt: string | null;
 }>;
 
+// Source: ./sanity/lib/user/getUser.ts
+// Variable: getExistingUserQuery
+// Query: *[_type == "user" && _id == $id][0]
+export type GetExistingUserQueryResult = {
+  _id: string;
+  _type: "user";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  username?: string;
+  email?: string;
+  imageUrl?: string;
+  joinedAt?: string;
+  isreported?: boolean;
+} | null;
+
 // Query TypeMap
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     "\n    *[_type == \"subverse\"] | order(createdAt desc) {\n      _id,\n      title,\n      \"slug\": slug.current,\n      description,\n      image,\n      \"moderator\": moderator->,\n      createdAt\n    }\n  ": GetSubversesQueryResult;
+    "*[_type == \"user\" && _id == $id][0]": GetExistingUserQueryResult;
   }
 }

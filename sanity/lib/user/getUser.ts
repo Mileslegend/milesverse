@@ -46,13 +46,14 @@ export async function getUser(): Promise<UserResult | { error: string }> {
 
     //if user exists, return the user data
     if (existingUser.data?._id) {
-      console.log(`User found in database with iD: ${existingUser.daat._id} `);
+      console.log(`User found in database with iD: ${existingUser.data._id} `);
       const user = {
         _id: existingUser.data._id,
         username: existingUser.data.username!,
         imageUrl: existingUser.data.imageUrl!,
         email: existingUser.data.email,
       };
+      
       return user;
     }
 
@@ -69,7 +70,7 @@ export async function getUser(): Promise<UserResult | { error: string }> {
 
     console.log(`New user created with ID: ${newUser._id} `)
     const user = {
-        -id: newUser._id,
+        _id: newUser._id,
         username: newUser.username!,
         imageUrl: newUser.imageUrl,
         email: newUser.email

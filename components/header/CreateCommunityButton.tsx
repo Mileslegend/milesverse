@@ -15,6 +15,8 @@ import { Textarea } from "../ui/textarea";
 import Image from "next/image";
 import { ImageIcon } from "lucide-react";
 import { Button } from "../ui/button";
+import { createCommunity } from "@/actions/createCommunity";
+import { useRouter } from "next/navigation";
 
 function CreateCommunityButton() {
   const { user } = useUser();
@@ -29,6 +31,8 @@ function CreateCommunityButton() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [isPending, startTransition] = useTransition();
+
+  const router = useRouter()
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -123,6 +127,9 @@ function CreateCommunityButton() {
           description.trim() || undefined
         );
 
+        console.log("Community Created 🤗:", result)
+        //router.push(`/community/${result.subverse._id}`)
+
         if ("error" in result && result.error) {
           setErrorMessage(result.error);
         } else if ("subverse" in result && result.subverse) {
@@ -196,7 +203,7 @@ function CreateCommunityButton() {
                 required
                 minLength={3}
                 maxLength={21}
-                pattern="[a-z0-9-]+"
+                pattern="^[\-a-z0-9]+$" 
                 title="Lowercase letters, numbers, and hyphens only"
               />
               <p className="text-xs text-gray-500">
