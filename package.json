@@ -29,6 +29,7 @@
     "next-sanity": "^9.10.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-timeago": "^8.2.0",
     "sanity": "^3.86.1",
     "styled-components": "^6.1.17",
     "tailwind-merge": "^3.2.0"

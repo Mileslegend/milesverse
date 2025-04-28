@@ -15,6 +15,12 @@ const nextConfig: NextConfig = {
         port: "",        // leave empty if default 443
         pathname: "/**", // allow any path under img.clerk.com
       },
+      {
+        protocol: "https",
+        hostname: "cdn.sanity.io",
+        port: "",        // leave empty
+        pathname: "/**", // allow any path under cdn.sanity.io
+      },
     ],
   },
 };
