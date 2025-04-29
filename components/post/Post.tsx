@@ -3,6 +3,11 @@ import Image from "next/image";
 import React from "react";
 import TimeAgo from "../TimeAgo";
 import { urlFor } from "@/sanity/lib/image";
+import { MessageSquare } from "lucide-react";
+import { getPostComments } from "@/sanity/lib/vote/getPostComments";
+import { getUserPostVoteStatus } from "@/sanity/lib/vote/getUserPostVoteStatus";
+import { getPostVotes } from "@/sanity/lib/vote/getPostVotes";
+import CommentInput from "../comment/CommentInput";
 
 interface PostProps {
   post: GetAllPostsQueryResult[number];
@@ -10,9 +15,9 @@ interface PostProps {
 }
 
 async function Post({ post, userId }: PostProps) {
-  //const votes = await getPostVotes(post._id);
-  //const vote = await getUserPostVoteStatus(post._id, userId);
-  //const comments = await getPostComments(post._id, userId);
+  const votes = await getPostVotes(post._id);
+  const vote = await getUserPostVoteStatus(post._id, userId);
+  const comments = await getPostComments(post._id, userId);
 
   return (
     <article
@@ -81,6 +86,13 @@ async function Post({ post, userId }: PostProps) {
                 />
             </div>
           )}
+          <button className="flex items-center px-1 py-2 gap-1 text-sm text-gray-500">
+            <MessageSquare className="w-4 h-4" />
+            <span className="space-x-2">{comments.length}  Comments</span>
+          </button>
+          {/* Comment Input */}
+          <CommentInput postId={post._id} />
+          {/* CommentList */}
         </div>
       </div>
 
