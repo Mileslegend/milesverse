@@ -8,6 +8,8 @@ import { getPostComments } from "@/sanity/lib/vote/getPostComments";
 import { getUserPostVoteStatus } from "@/sanity/lib/vote/getUserPostVoteStatus";
 import { getPostVotes } from "@/sanity/lib/vote/getPostVotes";
 import CommentInput from "../comment/CommentInput";
+import CommentList from "../comment/CommentList";
+import PostVoteButtons from "./PostVoteButtons";
 
 interface PostProps {
   post: GetAllPostsQueryResult[number];
@@ -27,12 +29,12 @@ async function Post({ post, userId }: PostProps) {
       <div className="flex ">
         {/* vote buttons */}
 
-        {/* <PostVoteButtons
+        <PostVoteButtons
             contentId={post._id}
             votes={votes}
             vote={vote}
             contentType = "post"
-            /> */}
+            />
 
         {/* Post Content */}
         <div className="flex-1 p-3">
@@ -93,6 +95,7 @@ async function Post({ post, userId }: PostProps) {
           {/* Comment Input */}
           <CommentInput postId={post._id} />
           {/* CommentList */}
+          <CommentList postId={post._id} comments={comments} userId={userId} />
         </div>
       </div>
 

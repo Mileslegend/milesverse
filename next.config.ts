@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   // 1️⃣ Whitelist your Gitpod (or Codespace/ngrok) URL
   allowedDevOrigins: [
     "https://3000-mileslegend-milesverse-a48pxt1fjb9.ws-eu118.gitpod.io",
+    "https://3000-mileslegend-milesverse-crnhpy05u2n.ws-eu118.gitpod.io/",
   ],
 
   // 2️⃣ Use the new remotePatterns format instead of domains
