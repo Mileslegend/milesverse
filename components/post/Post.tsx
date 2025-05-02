@@ -1,4 +1,4 @@
-import { GetAllPostsQueryResult } from "@/sanity.types";
+import { GetAllPostsQueryResult, GetPostsForSubverseQueryResult } from "@/sanity.types";
 import Image from "next/image";
 import React from "react";
 import TimeAgo from "../TimeAgo";
@@ -12,7 +12,7 @@ import CommentList from "../comment/CommentList";
 import PostVoteButtons from "./PostVoteButtons";
 
 interface PostProps {
-  post: GetAllPostsQueryResult[number];
+  post: GetAllPostsQueryResult[number] | GetPostsForSubverseQueryResult[number];
   userId: string | null;
 }
 

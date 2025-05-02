@@ -11,6 +11,7 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 import { ChevronsLeftIcon, MenuIcon } from "lucide-react";
 import { useSidebar } from "../ui/sidebar";
+import CreatePost from "../post/CreatePost";
 
 const Header = () => {
   //const { user } = useUser();
@@ -47,7 +48,8 @@ const Header = () => {
       </div>
 
       {/* Right side */}
-      <div>
+      <div className="flec items-center gap-2">
+        <CreatePost />
         <SignedIn>
           <UserButton />
         </SignedIn>

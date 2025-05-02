@@ -431,10 +431,181 @@ export type CheckBySlugResult = Array<{
   _id: string;
 }>;
 
+// Source: ./sanity/lib/subverse/getPostsForSubverse.ts
+// Variable: getPostsForSubverseQuery
+// Query: *[_type == "post" && subverse._ref == $id]{      ...,      "slug": slug.current,      "author": author->,      "subverse": subverse->,      "category": category->,      "upvotes": count(*[_type == "vote" && post._ref == ^._id && voteType == "upvote"]),      "downvotes": count(*[_type == "vote" && post._ref == ^._id && voteType == "downvote"]),      "netscore": count(*[_type == "vote" && post._ref == ^._id && voteType == "upvote"])                 -                  count(*[_type == "vote" && post._ref == ^._id && voteType == "downvote"]),      "commentCount": count(*[_type == "comment" && post._ref == ^._id])    } | order(publishedAt desc)
+export type GetPostsForSubverseQueryResult = Array<{
+  _id: string;
+  _type: "post";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  originalTitle?: string;
+  author: {
+    _id: string;
+    _type: "user";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    username?: string;
+    email?: string;
+    imageUrl?: string;
+    joinedAt?: string;
+    isreported?: boolean;
+  } | null;
+  subverse: {
+    _id: string;
+    _type: "subverse";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    title?: string;
+    description?: string;
+    slug?: Slug;
+    image?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+    };
+    moderator?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "user";
+    };
+    createdAt?: string;
+  } | null;
+  body?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }>;
+  image?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  isReported?: boolean;
+  publishedAt?: string;
+  isDeleted?: boolean;
+  slug: null;
+  category: null;
+  upvotes: number;
+  downvotes: number;
+  netscore: number;
+  commentCount: number;
+}>;
+
+// Source: ./sanity/lib/subverse/getSubverseBySlug.ts
+// Variable: getSubverseBySlugQuery
+// Query: *[_type == "subverse" && slug.current == $slug][0]{      ...,      "slug": slug.current,      "moderator": moderator->,    }
+export type GetSubverseBySlugQueryResult = {
+  _id: string;
+  _type: "subverse";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  description?: string;
+  slug: string | null;
+  image?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  moderator: {
+    _id: string;
+    _type: "user";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    username?: string;
+    email?: string;
+    imageUrl?: string;
+    joinedAt?: string;
+    isreported?: boolean;
+  } | null;
+  createdAt?: string;
+} | null;
+
 // Source: ./sanity/lib/subverse/getSubverses.ts
 // Variable: getSubversesQuery
 // Query: *[_type == "subverse"] | order(createdAt desc) {      _id,      title,      "slug": slug.current,      description,      image,      "moderator": moderator->,      createdAt    }
 export type GetSubversesQueryResult = Array<{
+  _id: string;
+  title: string | null;
+  slug: string | null;
+  description: string | null;
+  image: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  } | null;
+  moderator: {
+    _id: string;
+    _type: "user";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    username?: string;
+    email?: string;
+    imageUrl?: string;
+    joinedAt?: string;
+    isreported?: boolean;
+  } | null;
+  createdAt: string | null;
+}>;
+
+// Source: ./sanity/lib/subverse/searchSubverses.ts
+// Variable: searchSubVersesQuery
+// Query: *[_type == "subverse" && title match $searchTerm + "*"]{      _id,      title,      "slug": slug.current,      description,      image,      "moderator": moderator->,      createdAt    } | order(createdAt desc)
+export type SearchSubVersesQueryResult = Array<{
   _id: string;
   title: string | null;
   slug: string | null;
@@ -642,7 +813,10 @@ declare module "@sanity/client" {
     "\n        *[_type == \"post\" && (isDeleted == false || !defined(isDeleted))] {\n            _id,\n            title,\n            \"slug\": slug.current,\n            body,\n            publishedAt,\n            \"author\": author->,\n            \"subverse\": subverse->,\n            image,\n            isDeleted\n        } | order(publishedAt desc)\n    ": GetAllPostsQueryResult;
     "\n      *[_type == \"subverse\" && title == $name] { _id }\n    ": CheckByTitleResult;
     "\n      *[_type == \"subverse\" && slug.current == $slug] { _id }\n    ": CheckBySlugResult;
+    "\n    *[_type == \"post\" && subverse._ref == $id]{\n      ...,\n      \"slug\": slug.current,\n      \"author\": author->,\n      \"subverse\": subverse->,\n      \"category\": category->,\n      \"upvotes\": count(*[_type == \"vote\" && post._ref == ^._id && voteType == \"upvote\"]),\n      \"downvotes\": count(*[_type == \"vote\" && post._ref == ^._id && voteType == \"downvote\"]),\n      \"netscore\": count(*[_type == \"vote\" && post._ref == ^._id && voteType == \"upvote\"])\n                 - \n                 count(*[_type == \"vote\" && post._ref == ^._id && voteType == \"downvote\"]),\n      \"commentCount\": count(*[_type == \"comment\" && post._ref == ^._id])\n    } | order(publishedAt desc)\n  ": GetPostsForSubverseQueryResult;
+    "\n    *[_type == \"subverse\" && slug.current == $slug][0]{\n      ...,\n      \"slug\": slug.current,\n      \"moderator\": moderator->,\n    }\n  ": GetSubverseBySlugQueryResult;
     "\n    *[_type == \"subverse\"] | order(createdAt desc) {\n      _id,\n      title,\n      \"slug\": slug.current,\n      description,\n      image,\n      \"moderator\": moderator->,\n      createdAt\n    }\n  ": GetSubversesQueryResult;
+    "\n    *[_type == \"subverse\" && title match $searchTerm + \"*\"]{\n      _id,\n      title,\n      \"slug\": slug.current,\n      description,\n      image,\n      \"moderator\": moderator->,\n      createdAt\n    } | order(createdAt desc)\n  ": SearchSubVersesQueryResult;
     "*[_type == \"user\" && _id == $id][0]": GetExistingUserQueryResult;
     "\n    *[_type == \"vote\" && comment._ref == $commentId && user._ref == $userId][0]\n  ": ExistingVoteDownvoteCommentQueryResult | ExistingVoteUpvoteCommentQueryResult;
     "\n    *[_type == \"vote\" && post._ref == $postId && user._ref == $userId][0]\n  ": ExistingVoteQueryResult;
