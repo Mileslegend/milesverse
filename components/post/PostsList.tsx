@@ -12,7 +12,6 @@ async function PostsList() {
 
   return (
     <div className='space-y-4'>
-      <p>Posts coming soon ...</p>
       {
         posts.map((post) => (
           <Post key={post._id} post={post} userId={user?.id || null} />

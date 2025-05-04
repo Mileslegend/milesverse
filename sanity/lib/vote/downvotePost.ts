@@ -5,12 +5,12 @@ import { adminClient } from "../adminClient";
 // Toggle or set upvote on a post by a user
 export async function downvotePost(postId: string, userId: string) {
   // Check for existing vote
-  const existingVoteQuery = defineQuery(`
+  const existingDownVoteQuery = defineQuery(`
     *[_type == "vote" && post._ref == $postId && user._ref == $userId][0]
   `);
 
   const result = await sanityFetch({
-    query: existingVoteQuery,
+    query: existingDownVoteQuery,
     params: { postId, userId },
   });
 

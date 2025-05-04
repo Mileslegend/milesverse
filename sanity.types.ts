@@ -686,9 +686,9 @@ export type ExistingVoteDownvoteCommentQueryResult = {
 } | null;
 
 // Source: ./sanity/lib/vote/downvotePost.ts
-// Variable: existingVoteQuery
+// Variable: existingDownVoteQuery
 // Query: *[_type == "vote" && post._ref == $postId && user._ref == $userId][0]
-export type ExistingVoteQueryResult = {
+export type ExistingDownVoteQueryResult = {
   _id: string;
   _type: "vote";
   _createdAt: string;
@@ -805,6 +805,37 @@ export type ExistingVoteUpvoteCommentQueryResult = {
   createdAt?: string;
 } | null;
 
+// Source: ./sanity/lib/vote/upvotePost.ts
+// Variable: existingVoteUpvoteQuery
+// Query: *[_type == "vote" && post._ref == $postId && user._ref == $userId][0]
+export type ExistingVoteUpvoteQueryResult = {
+  _id: string;
+  _type: "vote";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  user?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "user";
+  };
+  voteType?: "downvote" | "upvote";
+  post?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "post";
+  };
+  comment?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "comment";
+  };
+  createdAt?: string;
+} | null;
+
 // Query TypeMap
 import "@sanity/client";
 declare module "@sanity/client" {
@@ -819,7 +850,7 @@ declare module "@sanity/client" {
     "\n    *[_type == \"subverse\" && title match $searchTerm + \"*\"]{\n      _id,\n      title,\n      \"slug\": slug.current,\n      description,\n      image,\n      \"moderator\": moderator->,\n      createdAt\n    } | order(createdAt desc)\n  ": SearchSubVersesQueryResult;
     "*[_type == \"user\" && _id == $id][0]": GetExistingUserQueryResult;
     "\n    *[_type == \"vote\" && comment._ref == $commentId && user._ref == $userId][0]\n  ": ExistingVoteDownvoteCommentQueryResult | ExistingVoteUpvoteCommentQueryResult;
-    "\n    *[_type == \"vote\" && post._ref == $postId && user._ref == $userId][0]\n  ": ExistingVoteQueryResult;
+    "\n    *[_type == \"vote\" && post._ref == $postId && user._ref == $userId][0]\n  ": ExistingDownVoteQueryResult | ExistingVoteUpvoteQueryResult;
     "\n    *[_type == \"comment\" && post._ref == $postId && !defined(parentComment)] {\n      _id,\n      content,\n      createdAt,\n      \"author\": author->,\n      \"replies\": *[_type == \"comment\" && parentComment._ref == ^._id] {\n        _id,\n        content,\n        createdAt,\n        \"author\": author->,\n      },\n      \"votes\": {\n        \"upvotes\": count(*[_type == \"vote\" && comment._ref == ^._id && voteType == \"upvote\"]),\n        \"downvotes\": count(*[_type == \"vote\" && comment._ref == ^._id && voteType == \"downvote\"]),\n        \"netscore\": count(*[_type == \"vote\" && comment._ref == ^._id && voteType == \"upvote\"])\n                    - \n                    count(*[_type == \"vote\" && comment._ref == ^._id && voteType == \"downvote\"]),\n        \"voteStatus\": *[_type == \"vote\" && comment._ref == ^._id && user._ref == $userId][0].voteType\n      }\n    } | order(createdAt desc)\n  ": GetPostCommentsQueryResult;
     "\n        {\n          \"upvotes\": count(*[\n            _type == \"vote\" &&\n            post._ref == $postId &&\n            voteType == \"upvote\"\n          ]),\n          \"downvotes\": count(*[\n            _type == \"vote\" &&\n            post._ref == $postId &&\n            voteType == \"downvote\"\n          ]),\n          \"netScore\": count(*[\n            _type == \"vote\" &&\n            post._ref == $postId &&\n            voteType == \"upvote\"\n          ]) - count(*[\n            _type == \"vote\" &&\n            post._ref == $postId &&\n            voteType == \"downvote\"\n          ])\n        }\n        ": GetPostVotesQueryResult;
     "\n    *[_type == \"vote\" && post._ref == $postId && user._ref == $userId][0].voteType\n  ": GetUserPostVoteStatusQueryResult;
