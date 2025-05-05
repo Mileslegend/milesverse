@@ -128,7 +128,7 @@ function CreateCommunityButton() {
         );
 
         console.log("Community Created 🤗:", result)
-        
+
 
         if ("error" in result) {
           setErrorMessage(result.error)
@@ -136,7 +136,7 @@ function CreateCommunityButton() {
           // result is a Subverse
           setOpen(false)
           resetForm()
-          router.push(`/community/${result.slug.current}`)
+          router.push(`/community/${result.slug?.current || slug}`)
         }
       } catch (error) {
         console.error("Failed to create community", error);

@@ -51,9 +51,9 @@ export async function getUser(): Promise<UserResult | { error: string }> {
         _id: existingUser.data._id,
         username: existingUser.data.username!,
         imageUrl: existingUser.data.imageUrl!,
-        email: existingUser.data.email,
+        email: existingUser.data.email || "",
       };
-      
+
       return user;
     }
 
@@ -73,7 +73,7 @@ export async function getUser(): Promise<UserResult | { error: string }> {
         _id: newUser._id,
         username: newUser.username!,
         imageUrl: newUser.imageUrl,
-        email: newUser.email
+        email: newUser.email || ""
     };
 
     return user

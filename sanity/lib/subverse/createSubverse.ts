@@ -13,7 +13,7 @@ export async function createSubverse(
 ): Promise<Subverse | { error: string }> {
   console.log(`--- Creating Subverse: ${name} ---`)
   try {
-   
+
     // 1. Check by title using a $name parameter
     const checkByTitle = defineQuery(`
       *[_type == "subverse" && title == $name] { _id }
@@ -22,7 +22,7 @@ export async function createSubverse(
       query: checkByTitle,
       params: { name },
     })
-    if (foundByTitle.length > 0) {
+    if (foundByTitle.data && foundByTitle.data.length > 0) {
       return { error: `A subverse named "${name}" already exists.` }
     }
 
@@ -35,7 +35,7 @@ export async function createSubverse(
       query: checkBySlug,
       params: { slug },
     })
-    if (foundBySlug.length > 0) {
+    if (foundBySlug.data && foundBySlug.data.length > 0) {
       return { error: `The URL "/${slug}" is already taken.` }
     }
 

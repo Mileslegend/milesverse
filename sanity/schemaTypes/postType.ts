@@ -13,7 +13,7 @@ export const postType = defineType({
       title: "Title",
       type: "string",
       description: "The title of the post",
-      validation: (rule) => rule.required(rule).max(300),
+      validation: (rule) => rule.required().max(300),
     }),
     defineField({
       name: "originalTitle",
@@ -28,7 +28,7 @@ export const postType = defineType({
       type: "reference",
       description: "The user who created this post",
       to: [{ type: "user" }],
-      validation: (rule) => rule.required(rule),
+      validation: (rule) => rule.required(),
     }),
     defineField({
       name: "subverse",
@@ -36,7 +36,7 @@ export const postType = defineType({
       type: "reference",
       description: "The subverse this post belongs to",
       to: [{ type: "subverse" }],
-      validation: (rule) => rule.required(rule),
+      validation: (rule) => rule.required(),
     }),
     defineField({
       name: "body",

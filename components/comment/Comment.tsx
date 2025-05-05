@@ -26,13 +26,23 @@ async function Comment({
 
   const userVoteStatus = comment.votes.voteStatus;
 
+  // Ensure consistent property naming for votes
+  const normalizedVotes = {
+    upvotes: comment.votes.upvotes,
+    downvotes: comment.votes.downvotes,
+    netScore: 'netScore' in comment.votes 
+      ? (comment.votes as any).netScore 
+      : (comment.votes as any).netscore,
+    voteStatus: comment.votes.voteStatus
+  };
+
   return (
     <article className="py-5 border-b border-gray-100 last:border-0">
       <div className="flex gap-4">
         {/* PostVoteButtons */}
         <PostVoteButtons 
           contentId={comment._id}
-          votes={comment.votes}
+          votes={normalizedVotes}
           vote={userVoteStatus}
           contentType="comment"
         />
@@ -58,7 +68,11 @@ async function Comment({
               {comment.author?.username || "Anonymous"}
             </h3>
             <span className="text-xs text-gray-500 ">
-              <TimeAgo date={new Date(comment.createdAt!)} />
+              <TimeAgo date={new Date(
+                ('createdAt' in comment 
+                  ? (comment as any).createdAt 
+                  : (comment as any)._createdAt)!
+              )} />
             </span>
           </div>
           <p className="text-gray-700 leading-relaxed">{comment.content}</p>

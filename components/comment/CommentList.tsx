@@ -11,7 +11,7 @@ async function CommentList({
   comments: GetPostCommentsQueryResult | GetCommentRepliesQueryResult;
   userId: string | null;
 }) {
-  const isRootComment = !comments.some((comment) => comment.parentComment);
+  const isRootComment = !comments.some((comment) => 'parentComment' in comment);
 
   return (
     <section className="mt-8">
