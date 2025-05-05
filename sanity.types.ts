@@ -335,6 +335,90 @@ export type GetCommentRepliesQueryResult = Array<{
   };
 }>;
 
+// Source: ./sanity/lib/post/getPostById.ts
+// Variable: getPostByIdQuery
+// Query: *[_type == "post" && _id == $postId] {        _id,        title,        "slug": slug.current,        body,        publishedAt,        "author": author ->,        "subverse": subverse ->,        image,        isDeleted        }[0]
+export type GetPostByIdQueryResult = {
+  _id: string;
+  title: string | null;
+  slug: null;
+  body: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }> | null;
+  publishedAt: string | null;
+  author: {
+    _id: string;
+    _type: "user";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    username?: string;
+    email?: string;
+    imageUrl?: string;
+    joinedAt?: string;
+    isreported?: boolean;
+  } | null;
+  subverse: {
+    _id: string;
+    _type: "subverse";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    title?: string;
+    description?: string;
+    slug?: Slug;
+    image?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+    };
+    moderator?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "user";
+    };
+    createdAt?: string;
+  } | null;
+  image: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  } | null;
+  isDeleted: boolean | null;
+} | null;
+
 // Source: ./sanity/lib/post/getPosts.ts
 // Variable: getAllPostsQuery
 // Query: *[_type == "post" && (isDeleted == false || !defined(isDeleted))] {            _id,            title,            "slug": slug.current,            body,            publishedAt,            "author": author->,            "subverse": subverse->,            image,            isDeleted        } | order(publishedAt desc)
@@ -841,6 +925,7 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     "\n    *[_type == \"comment\" && parentComment._ref == $commentId] | order(_createdAt asc) {\n      _id,\n      content,\n      _createdAt,\n      \"author\": author->,\n      \"replies\": *[_type == \"comment\" && parentComment._ref == ^._id] {\n        _id,\n        content,\n        _createdAt,\n        \"author\": author->,\n      },\n      \"votes\": {\n        \"upvotes\": count(*[_type == \"vote\" && comment._ref == ^._id && voteType == \"upvote\"]),\n        \"downvotes\": count(*[_type == \"vote\" && comment._ref == ^._id && voteType == \"downvote\"]),\n        \"netScore\": count(*[_type == \"vote\" && comment._ref == ^._id && voteType == \"upvote\"])\n                  - count(*[_type == \"vote\" && comment._ref == ^._id && voteType == \"downvote\"]),\n        \"voteStatus\": *[_type == \"vote\" && comment._ref == ^._id && user._ref == $userId][0].voteType\n      }\n    }\n  ": GetCommentRepliesQueryResult;
+    "*[_type == \"post\" && _id == $postId] {\n        _id,\n        title,\n        \"slug\": slug.current,\n        body,\n        publishedAt,\n        \"author\": author ->,\n        \"subverse\": subverse ->,\n        image,\n        isDeleted\n        }[0] ": GetPostByIdQueryResult;
     "\n        *[_type == \"post\" && (isDeleted == false || !defined(isDeleted))] {\n            _id,\n            title,\n            \"slug\": slug.current,\n            body,\n            publishedAt,\n            \"author\": author->,\n            \"subverse\": subverse->,\n            image,\n            isDeleted\n        } | order(publishedAt desc)\n    ": GetAllPostsQueryResult;
     "\n      *[_type == \"subverse\" && title == $name] { _id }\n    ": CheckByTitleResult;
     "\n      *[_type == \"subverse\" && slug.current == $slug] { _id }\n    ": CheckBySlugResult;
