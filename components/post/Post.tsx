@@ -1,4 +1,7 @@
-import { GetAllPostsQueryResult, GetPostsForSubverseQueryResult } from "@/sanity.types";
+import {
+  GetAllPostsQueryResult,
+  GetPostsForSubverseQueryResult,
+} from "@/sanity.types";
 import Image from "next/image";
 import React from "react";
 import TimeAgo from "../TimeAgo";
@@ -10,6 +13,7 @@ import { getPostVotes } from "@/sanity/lib/vote/getPostVotes";
 import CommentInput from "../comment/CommentInput";
 import CommentList from "../comment/CommentList";
 import PostVoteButtons from "./PostVoteButtons";
+import ReportButton from "../ReportButton";
 
 interface PostProps {
   post: GetAllPostsQueryResult[number] | GetPostsForSubverseQueryResult[number];
@@ -30,11 +34,11 @@ async function Post({ post, userId }: PostProps) {
         {/* vote buttons */}
 
         <PostVoteButtons
-            contentId={post._id}
-            votes={votes}
-            vote={vote}
-            contentType = "post"
-            />
+          contentId={post._id}
+          votes={votes}
+          vote={vote}
+          contentType="post"
+        />
 
         {/* Post Content */}
         <div className="flex-1 p-3">
@@ -80,17 +84,17 @@ async function Post({ post, userId }: PostProps) {
 
           {post.image && post.image.asset?._ref && (
             <div className="relative w-full h-64 mb-3 px-2 bg-gray-100/30">
-                <Image 
+              <Image
                 src={urlFor(post.image).url()}
                 alt={post.image.alt || "Post image"}
                 fill
                 className="object-contain rounded-md p-2"
-                />
+              />
             </div>
           )}
           <button className="flex items-center px-1 py-2 gap-1 text-sm text-gray-500">
             <MessageSquare className="w-4 h-4" />
-            <span className="space-x-2">{comments.length}  Comments</span>
+            <span className="space-x-2">{comments.length} Comments</span>
           </button>
           {/* Comment Input */}
           <CommentInput postId={post._id} />
@@ -101,6 +105,11 @@ async function Post({ post, userId }: PostProps) {
 
       {/* Buttons */}
       {/* Report Button */}
+      <div className="absolute top-2 right-2 ">
+        <div className="flex items-center gap-2">
+          <ReportButton contentId={post._id} />
+        </div>
+      </div>
       {/* Delete Button */}
     </article>
   );
