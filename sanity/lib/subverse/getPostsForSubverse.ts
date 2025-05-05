@@ -11,7 +11,7 @@ export default async function getPostsForSubverse(id: string) {
       "category": category->,
       "upvotes": count(*[_type == "vote" && post._ref == ^._id && voteType == "upvote"]),
       "downvotes": count(*[_type == "vote" && post._ref == ^._id && voteType == "downvote"]),
-      "netscore": count(*[_type == "vote" && post._ref == ^._id && voteType == "upvote"])
+      "netScore": count(*[_type == "vote" && post._ref == ^._id && voteType == "upvote"])
                  - 
                  count(*[_type == "vote" && post._ref == ^._id && voteType == "downvote"]),
       "commentCount": count(*[_type == "comment" && post._ref == ^._id])

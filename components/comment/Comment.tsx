@@ -30,7 +30,7 @@ async function Comment({
     <article className="py-5 border-b border-gray-100 last:border-0">
       <div className="flex gap-4">
         {/* PostVoteButtons */}
-        <PostVoteButtons 
+        <PostVoteButtons
           contentId={comment._id}
           votes={comment.votes}
           vote={userVoteStatus}
@@ -58,20 +58,18 @@ async function Comment({
               {comment.author?.username || "Anonymous"}
             </h3>
             <span className="text-xs text-gray-500 ">
-              <TimeAgo date={new Date(comment.createdAt!)} />
+            <TimeAgo date={new Date(comment.createdAt!)} />
             </span>
           </div>
           <p className="text-gray-700 leading-relaxed">{comment.content}</p>
 
-          <CommentReply postId={postId} comment={comment}  />
+          <CommentReply postId={postId} comment={comment} />
           {/* Comment replies - supports infinite nesting */}
-          {
-            replies?.length > 0 && (
-              <div className="mt-3 ps-2 border-s-2 border-gray-100">
-                <CommentList postId={postId} comments={replies} userId={userId} />
-              </div>
-            )
-          }
+          {replies?.length > 0 && (
+            <div className="mt-3 ps-2 border-s-2 border-gray-100">
+              <CommentList postId={postId} comments={replies} userId={userId} />
+            </div>
+          )}
         </div>
       </div>
     </article>

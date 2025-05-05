@@ -21,7 +21,7 @@ export async function getPostComments(postId: string, userId: string | null) {
       "votes": {
         "upvotes": count(*[_type == "vote" && comment._ref == ^._id && voteType == "upvote"]),
         "downvotes": count(*[_type == "vote" && comment._ref == ^._id && voteType == "downvote"]),
-        "netscore": count(*[_type == "vote" && comment._ref == ^._id && voteType == "upvote"])
+        "netScore": count(*[_type == "vote" && comment._ref == ^._id && voteType == "upvote"])
                     - 
                     count(*[_type == "vote" && comment._ref == ^._id && voteType == "downvote"]),
         "voteStatus": *[_type == "vote" && comment._ref == ^._id && user._ref == $userId][0].voteType

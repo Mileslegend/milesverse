@@ -1,10 +1,16 @@
 "use server";
 import slugify from "slugify";
+import { createClerkToolkit } from "@clerk/agent-toolkit/ai-sdk";
 
 import { Post } from "@/sanity.types";
 import { adminClient } from "@/sanity/lib/adminClient";
 import getSubverseBySlug from "@/sanity/lib/subverse/getSubverseBySlug";
 import { getUser } from "@/sanity/lib/user/getUser";
+import { CoreMessage, generateText } from "ai";
+import { auth } from "@clerk/nextjs/server";
+import { censorPost, reportUser } from "@/tools/tools";
+import {openai} from '@ai-sdk/openai'
+import { systemPrompt } from "@/tools/prompt";
 
 export type PostImageData = {
   base64: string;
@@ -146,7 +152,42 @@ export async function createPost({
     //Call the content moderation API
     // -----MOD STEP -----
     //TODO: Implement content moderation API call
+    console.log(">>----  Starting  content moderation process ----<<");
+    const messages: CoreMessage[] = [
+      {
+        role: "user",
+        content: `I posted this post -> Post ID: ${post._id}\n Title: ${title}\n Body: ${body}`,
+      },
+    ];
+
+    console.log("Prepared message for moderation:", JSON.stringify(messages));
+
+    try {
+      const authContext = await auth.protect();
+
+      const toolkit = await createClerkToolkit({ authContext });
+
+      //call to generate text
+      const result = generateText({
+        model: openai("gpt-4o-mini"),
+        messages: messages as CoreMessage[],
+        //Conditionally inject session claims if we have auth context
+        system: toolkit.injectSessionClaims(systemPrompt),
+        tools: {
+          ...toolkit.users(),
+          censorPost,
+          reportUser,
+        }
+      })
+
+    } catch (error) {
+      console.error("Error in content moderation:", error);
+      //Dont fail the whole post creation if moderation fails
+      console.log("Continuing without content moderation");
+    };
+
     // END
+    console.log("Post creation process completed successfully", post)
 
     return { post };
   } catch (error) {
