@@ -291,6 +291,28 @@ export type User = {
 
 export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | Vote | Comment | Post | Subverse | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Slug | User;
 export declare const internalGroqTypeReferenceTo: unique symbol;
+// Source: ./sanity/lib/comment/getCommentById.ts
+// Variable: getCommentByIdQuery
+// Query: *[_type == "comment" && _id == $commentId][0] {        _id,        content,        "createdAt": _createdAt,        "author": author ->,        isDeleted        }
+export type GetCommentByIdQueryResult = {
+  _id: string;
+  content: string | null;
+  createdAt: string;
+  author: {
+    _id: string;
+    _type: "user";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    username?: string;
+    email?: string;
+    imageUrl?: string;
+    joinedAt?: string;
+    isreported?: boolean;
+  } | null;
+  isDeleted: boolean | null;
+} | null;
+
 // Source: ./sanity/lib/comment/getCommentReplies.ts
 // Variable: getCommentRepliesQuery
 // Query: *[_type == "comment" && parentComment._ref == $commentId] | order(_createdAt asc) {      _id,      content,      _createdAt,      "author": author->,      "replies": *[_type == "comment" && parentComment._ref == ^._id] {        _id,        content,        _createdAt,        "author": author->,      },      "votes": {        "upvotes": count(*[_type == "vote" && comment._ref == ^._id && voteType == "upvote"]),        "downvotes": count(*[_type == "vote" && comment._ref == ^._id && voteType == "downvote"]),        "netScore": count(*[_type == "vote" && comment._ref == ^._id && voteType == "upvote"])                  - count(*[_type == "vote" && comment._ref == ^._id && voteType == "downvote"]),        "voteStatus": *[_type == "vote" && comment._ref == ^._id && user._ref == $userId][0].voteType      }    }
@@ -517,7 +539,7 @@ export type CheckBySlugResult = Array<{
 
 // Source: ./sanity/lib/subverse/getPostsForSubverse.ts
 // Variable: getPostsForSubverseQuery
-// Query: *[_type == "post" && subverse._ref == $id]{      ...,      "slug": slug.current,      "author": author->,      "subverse": subverse->,      "category": category->,      "upvotes": count(*[_type == "vote" && post._ref == ^._id && voteType == "upvote"]),      "downvotes": count(*[_type == "vote" && post._ref == ^._id && voteType == "downvote"]),      "netscore": count(*[_type == "vote" && post._ref == ^._id && voteType == "upvote"])                 -                  count(*[_type == "vote" && post._ref == ^._id && voteType == "downvote"]),      "commentCount": count(*[_type == "comment" && post._ref == ^._id])    } | order(publishedAt desc)
+// Query: *[_type == "post" && subverse._ref == $id]{      ...,      "slug": slug.current,      "author": author->,      "subverse": subverse->,      "category": category->,      "upvotes": count(*[_type == "vote" && post._ref == ^._id && voteType == "upvote"]),      "downvotes": count(*[_type == "vote" && post._ref == ^._id && voteType == "downvote"]),      "netScore": count(*[_type == "vote" && post._ref == ^._id && voteType == "upvote"])                 -                  count(*[_type == "vote" && post._ref == ^._id && voteType == "downvote"]),      "commentCount": count(*[_type == "comment" && post._ref == ^._id])    } | order(publishedAt desc)
 export type GetPostsForSubverseQueryResult = Array<{
   _id: string;
   _type: "post";
@@ -606,7 +628,7 @@ export type GetPostsForSubverseQueryResult = Array<{
   category: null;
   upvotes: number;
   downvotes: number;
-  netscore: number;
+  netScore: number;
   commentCount: number;
 }>;
 
@@ -802,7 +824,7 @@ export type ExistingDownVoteQueryResult = {
 
 // Source: ./sanity/lib/vote/getPostComments.ts
 // Variable: getPostCommentsQuery
-// Query: *[_type == "comment" && post._ref == $postId && !defined(parentComment)] {      _id,      content,      createdAt,      "author": author->,      "replies": *[_type == "comment" && parentComment._ref == ^._id] {        _id,        content,        createdAt,        "author": author->,      },      "votes": {        "upvotes": count(*[_type == "vote" && comment._ref == ^._id && voteType == "upvote"]),        "downvotes": count(*[_type == "vote" && comment._ref == ^._id && voteType == "downvote"]),        "netscore": count(*[_type == "vote" && comment._ref == ^._id && voteType == "upvote"])                    -                     count(*[_type == "vote" && comment._ref == ^._id && voteType == "downvote"]),        "voteStatus": *[_type == "vote" && comment._ref == ^._id && user._ref == $userId][0].voteType      }    } | order(createdAt desc)
+// Query: *[_type == "comment" && post._ref == $postId && !defined(parentComment)] {      _id,      content,      createdAt,      "author": author->,      "replies": *[_type == "comment" && parentComment._ref == ^._id] {        _id,        content,        createdAt,        "author": author->,      },      "votes": {        "upvotes": count(*[_type == "vote" && comment._ref == ^._id && voteType == "upvote"]),        "downvotes": count(*[_type == "vote" && comment._ref == ^._id && voteType == "downvote"]),        "netScore": count(*[_type == "vote" && comment._ref == ^._id && voteType == "upvote"])                    -                     count(*[_type == "vote" && comment._ref == ^._id && voteType == "downvote"]),        "voteStatus": *[_type == "vote" && comment._ref == ^._id && user._ref == $userId][0].voteType      }    } | order(createdAt desc)
 export type GetPostCommentsQueryResult = Array<{
   _id: string;
   content: string | null;
@@ -839,7 +861,7 @@ export type GetPostCommentsQueryResult = Array<{
   votes: {
     upvotes: number;
     downvotes: number;
-    netscore: number;
+    netScore: number;
     voteStatus: "downvote" | "upvote" | null;
   };
 }>;
@@ -924,19 +946,20 @@ export type ExistingVoteUpvoteQueryResult = {
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
+    "*[_type == \"comment\" && _id == $commentId][0] {\n        _id,\n        content,\n        \"createdAt\": _createdAt,\n        \"author\": author ->,\n        isDeleted\n        }": GetCommentByIdQueryResult;
     "\n    *[_type == \"comment\" && parentComment._ref == $commentId] | order(_createdAt asc) {\n      _id,\n      content,\n      _createdAt,\n      \"author\": author->,\n      \"replies\": *[_type == \"comment\" && parentComment._ref == ^._id] {\n        _id,\n        content,\n        _createdAt,\n        \"author\": author->,\n      },\n      \"votes\": {\n        \"upvotes\": count(*[_type == \"vote\" && comment._ref == ^._id && voteType == \"upvote\"]),\n        \"downvotes\": count(*[_type == \"vote\" && comment._ref == ^._id && voteType == \"downvote\"]),\n        \"netScore\": count(*[_type == \"vote\" && comment._ref == ^._id && voteType == \"upvote\"])\n                  - count(*[_type == \"vote\" && comment._ref == ^._id && voteType == \"downvote\"]),\n        \"voteStatus\": *[_type == \"vote\" && comment._ref == ^._id && user._ref == $userId][0].voteType\n      }\n    }\n  ": GetCommentRepliesQueryResult;
     "*[_type == \"post\" && _id == $postId] {\n        _id,\n        title,\n        \"slug\": slug.current,\n        body,\n        publishedAt,\n        \"author\": author ->,\n        \"subverse\": subverse ->,\n        image,\n        isDeleted\n        }[0] ": GetPostByIdQueryResult;
     "\n        *[_type == \"post\" && (isDeleted == false || !defined(isDeleted))] {\n            _id,\n            title,\n            \"slug\": slug.current,\n            body,\n            publishedAt,\n            \"author\": author->,\n            \"subverse\": subverse->,\n            image,\n            isDeleted\n        } | order(publishedAt desc)\n    ": GetAllPostsQueryResult;
     "\n      *[_type == \"subverse\" && title == $name] { _id }\n    ": CheckByTitleResult;
     "\n      *[_type == \"subverse\" && slug.current == $slug] { _id }\n    ": CheckBySlugResult;
-    "\n    *[_type == \"post\" && subverse._ref == $id]{\n      ...,\n      \"slug\": slug.current,\n      \"author\": author->,\n      \"subverse\": subverse->,\n      \"category\": category->,\n      \"upvotes\": count(*[_type == \"vote\" && post._ref == ^._id && voteType == \"upvote\"]),\n      \"downvotes\": count(*[_type == \"vote\" && post._ref == ^._id && voteType == \"downvote\"]),\n      \"netscore\": count(*[_type == \"vote\" && post._ref == ^._id && voteType == \"upvote\"])\n                 - \n                 count(*[_type == \"vote\" && post._ref == ^._id && voteType == \"downvote\"]),\n      \"commentCount\": count(*[_type == \"comment\" && post._ref == ^._id])\n    } | order(publishedAt desc)\n  ": GetPostsForSubverseQueryResult;
+    "\n    *[_type == \"post\" && subverse._ref == $id]{\n      ...,\n      \"slug\": slug.current,\n      \"author\": author->,\n      \"subverse\": subverse->,\n      \"category\": category->,\n      \"upvotes\": count(*[_type == \"vote\" && post._ref == ^._id && voteType == \"upvote\"]),\n      \"downvotes\": count(*[_type == \"vote\" && post._ref == ^._id && voteType == \"downvote\"]),\n      \"netScore\": count(*[_type == \"vote\" && post._ref == ^._id && voteType == \"upvote\"])\n                 - \n                 count(*[_type == \"vote\" && post._ref == ^._id && voteType == \"downvote\"]),\n      \"commentCount\": count(*[_type == \"comment\" && post._ref == ^._id])\n    } | order(publishedAt desc)\n  ": GetPostsForSubverseQueryResult;
     "\n    *[_type == \"subverse\" && slug.current == $slug][0]{\n      ...,\n      \"slug\": slug.current,\n      \"moderator\": moderator->,\n    }\n  ": GetSubverseBySlugQueryResult;
     "\n    *[_type == \"subverse\"] | order(createdAt desc) {\n      _id,\n      title,\n      \"slug\": slug.current,\n      description,\n      image,\n      \"moderator\": moderator->,\n      createdAt\n    }\n  ": GetSubversesQueryResult;
     "\n    *[_type == \"subverse\" && title match $searchTerm + \"*\"]{\n      _id,\n      title,\n      \"slug\": slug.current,\n      description,\n      image,\n      \"moderator\": moderator->,\n      createdAt\n    } | order(createdAt desc)\n  ": SearchSubVersesQueryResult;
     "*[_type == \"user\" && _id == $id][0]": GetExistingUserQueryResult;
     "\n    *[_type == \"vote\" && comment._ref == $commentId && user._ref == $userId][0]\n  ": ExistingVoteDownvoteCommentQueryResult | ExistingVoteUpvoteCommentQueryResult;
     "\n    *[_type == \"vote\" && post._ref == $postId && user._ref == $userId][0]\n  ": ExistingDownVoteQueryResult | ExistingVoteUpvoteQueryResult;
-    "\n    *[_type == \"comment\" && post._ref == $postId && !defined(parentComment)] {\n      _id,\n      content,\n      createdAt,\n      \"author\": author->,\n      \"replies\": *[_type == \"comment\" && parentComment._ref == ^._id] {\n        _id,\n        content,\n        createdAt,\n        \"author\": author->,\n      },\n      \"votes\": {\n        \"upvotes\": count(*[_type == \"vote\" && comment._ref == ^._id && voteType == \"upvote\"]),\n        \"downvotes\": count(*[_type == \"vote\" && comment._ref == ^._id && voteType == \"downvote\"]),\n        \"netscore\": count(*[_type == \"vote\" && comment._ref == ^._id && voteType == \"upvote\"])\n                    - \n                    count(*[_type == \"vote\" && comment._ref == ^._id && voteType == \"downvote\"]),\n        \"voteStatus\": *[_type == \"vote\" && comment._ref == ^._id && user._ref == $userId][0].voteType\n      }\n    } | order(createdAt desc)\n  ": GetPostCommentsQueryResult;
+    "\n    *[_type == \"comment\" && post._ref == $postId && !defined(parentComment)] {\n      _id,\n      content,\n      createdAt,\n      \"author\": author->,\n      \"replies\": *[_type == \"comment\" && parentComment._ref == ^._id] {\n        _id,\n        content,\n        createdAt,\n        \"author\": author->,\n      },\n      \"votes\": {\n        \"upvotes\": count(*[_type == \"vote\" && comment._ref == ^._id && voteType == \"upvote\"]),\n        \"downvotes\": count(*[_type == \"vote\" && comment._ref == ^._id && voteType == \"downvote\"]),\n        \"netScore\": count(*[_type == \"vote\" && comment._ref == ^._id && voteType == \"upvote\"])\n                    - \n                    count(*[_type == \"vote\" && comment._ref == ^._id && voteType == \"downvote\"]),\n        \"voteStatus\": *[_type == \"vote\" && comment._ref == ^._id && user._ref == $userId][0].voteType\n      }\n    } | order(createdAt desc)\n  ": GetPostCommentsQueryResult;
     "\n        {\n          \"upvotes\": count(*[\n            _type == \"vote\" &&\n            post._ref == $postId &&\n            voteType == \"upvote\"\n          ]),\n          \"downvotes\": count(*[\n            _type == \"vote\" &&\n            post._ref == $postId &&\n            voteType == \"downvote\"\n          ]),\n          \"netScore\": count(*[\n            _type == \"vote\" &&\n            post._ref == $postId &&\n            voteType == \"upvote\"\n          ]) - count(*[\n            _type == \"vote\" &&\n            post._ref == $postId &&\n            voteType == \"downvote\"\n          ])\n        }\n        ": GetPostVotesQueryResult;
     "\n    *[_type == \"vote\" && post._ref == $postId && user._ref == $userId][0].voteType\n  ": GetUserPostVoteStatusQueryResult;
   }

@@ -40,7 +40,7 @@ async function Comment({
     <article className="py-5 border-b border-gray-100 last:border-0">
       <div className="flex gap-4">
         {/* PostVoteButtons */}
-        <PostVoteButtons 
+        <PostVoteButtons
           contentId={comment._id}
           votes={normalizedVotes}
           vote={userVoteStatus}
@@ -77,15 +77,13 @@ async function Comment({
           </div>
           <p className="text-gray-700 leading-relaxed">{comment.content}</p>
 
-          <CommentReply postId={postId} comment={comment}  />
+          <CommentReply postId={postId} comment={comment} />
           {/* Comment replies - supports infinite nesting */}
-          {
-            replies?.length > 0 && (
-              <div className="mt-3 ps-2 border-s-2 border-gray-100">
-                <CommentList postId={postId} comments={replies} userId={userId} />
-              </div>
-            )
-          }
+          {replies?.length > 0 && (
+            <div className="mt-3 ps-2 border-s-2 border-gray-100">
+              <CommentList postId={postId} comments={replies} userId={userId} />
+            </div>
+          )}
         </div>
       </div>
     </article>
